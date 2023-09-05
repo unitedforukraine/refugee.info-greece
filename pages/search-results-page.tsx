@@ -12,6 +12,7 @@ import {
   getTranslationsFromDynamicContent,
 } from '@ircsignpost/signpost-base/dist/src/zendesk';
 import { GetStaticProps } from 'next';
+import getConfig from 'next/config';
 
 import {
   CATEGORIES_TO_HIDE,
@@ -33,7 +34,7 @@ import {
   getZendeskLocaleId,
 } from '../lib/locale';
 import { getHeaderLogoProps } from '../lib/logo';
-import { getMenuItems } from '../lib/menu';
+import { getFooterItems, getMenuItems } from '../lib/menu';
 import {
   COMMON_DYNAMIC_CONTENT_PLACEHOLDERS,
   SEARCH_RESULTS_PLACEHOLDERS,
@@ -54,6 +55,7 @@ interface SearchResultsPageProps {
   siteUrl: string;
   // A map of dynamic content placeholders to their string values.
   dynamicContent: { [key: string]: string };
+  footerLinks?: MenuOverlayItem[];
 }
 
 export default function SearchResultsPage({
@@ -63,7 +65,10 @@ export default function SearchResultsPage({
   title,
   dynamicContent,
   siteUrl,
+  footerLinks,
 }: SearchResultsPageProps) {
+  const { publicRuntimeConfig } = getConfig();
+
   return (
     <DefaultSearchResultsPage
       currentLocale={currentLocale}
@@ -78,6 +83,8 @@ export default function SearchResultsPage({
       siteUrl={siteUrl}
       informationFilter={[4768127626007]}
       servicesFilter={[4420351005975]}
+      footerLinks={footerLinks}
+      signpostVersion={publicRuntimeConfig?.version}
       cookieBanner={
         <CookieBanner
           strings={populateCookieBannerStrings(dynamicContent)}
@@ -133,6 +140,11 @@ export const getStaticProps: GetStaticProps = async ({ locale }) => {
     menuCategories
   );
 
+  const footerLinks = getFooterItems(
+    populateMenuOverlayStrings(dynamicContent),
+    menuCategories
+  );
+
   const strings = populateSearchResultsPageStrings(dynamicContent);
 
   return {
@@ -143,6 +155,7 @@ export const getStaticProps: GetStaticProps = async ({ locale }) => {
       title: SITE_TITLE,
       siteUrl: getSiteUrl(),
       dynamicContent,
+      footerLinks,
     },
     revalidate: REVALIDATION_TIMEOUT_SECONDS,
   };

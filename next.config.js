@@ -1,9 +1,10 @@
 const withLess = require('next-with-less');
+const pack = require('./package.json');
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
-  swcMinify: true,
+  swcMinify: false,
   // Keep in sync with locales configured in /lib/locale.ts.
   i18n: {
     locales: ['default', 'en-us', 'ar', 'fa', 'fr', 'uk', 'ur'],
@@ -20,6 +21,21 @@ const nextConfig = {
         permanent: true,
       },
     ];
+  },
+  images: {
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'signpost-greece.zendesk.com',
+      },
+      {
+        protocol: 'https',
+        hostname: 'images.ctfassets.net',
+      },
+    ],
+  },
+  publicRuntimeConfig: {
+    version: pack.dependencies['@ircsignpost/signpost-base'],
   },
 };
 

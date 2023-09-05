@@ -4,14 +4,17 @@ import { ArticlePageStrings } from '@ircsignpost/signpost-base/dist/src/article-
 import { CategoryStrings } from '@ircsignpost/signpost-base/dist/src/category-page';
 import { CookieBannerStrings } from '@ircsignpost/signpost-base/dist/src/cookie-banner';
 import { ErrorProps } from '@ircsignpost/signpost-base/dist/src/error';
+import { FooterStrings } from '@ircsignpost/signpost-base/dist/src/footer';
 import { HeaderBannerStrings } from '@ircsignpost/signpost-base/dist/src/header-banner';
 import { HomePageStrings } from '@ircsignpost/signpost-base/dist/src/home-page';
 import { CardsListStrings } from '@ircsignpost/signpost-base/dist/src/home-page-cards-list';
+import { PopupStrings } from '@ircsignpost/signpost-base/dist/src/map';
 import { SearchBarStrings } from '@ircsignpost/signpost-base/dist/src/search-bar';
 import { SearchResultsPageStrings } from '@ircsignpost/signpost-base/dist/src/search-results-page';
 import { SearchResultsStrings } from '@ircsignpost/signpost-base/dist/src/search-results-page-content';
 import { SectionStrings } from '@ircsignpost/signpost-base/dist/src/section-page';
 import { ServiceMapStrings } from '@ircsignpost/signpost-base/dist/src/service-map';
+import { ServicePageStrings } from '@ircsignpost/signpost-base/dist/src/service-page';
 import { ShareButtonStrings } from '@ircsignpost/signpost-base/dist/src/share-button';
 
 import { CustomMenuOverlayStrings } from './menu';
@@ -35,18 +38,26 @@ export const COMMON_DYNAMIC_CONTENT_PLACEHOLDERS = [
   'default_last_updated',
   'default_article_reader_title',
   'default_banner_link_share_title',
+  'default_filter_label',
+  'default_most_recent_filter_option',
+  'default_most_popular_filter_option',
+  'default_home_disclaimer',
 ];
 
 export const HOME_PAGE_DYNAMIC_CONTENT_PLACEHOLDERS = [
   // Header banner and social media strings.
   'ri_greece_mission_statement',
   'default_banner_social_media_title',
+  'default_banner_social_media_description',
   'ri_greece_banner_social_media_description',
   'default_banner_facebook_title',
   'default_banner_messenger_title',
   'default_banner_whatsapp_title',
+  'default_banner_telegram_title',
   'ri_greece_facebook_link',
   'ri_greece_messenger_link',
+  'ri_greece_whatsapp_link',
+  'ri_greece_telegram_link',
   // Main body strings.
   'default_information_title',
   'ri_greece_information_description',
@@ -67,9 +78,19 @@ export const HOME_PAGE_DYNAMIC_CONTENT_PLACEHOLDERS = [
   'default_service_map_all_categories_option',
   'default_service_map_my_location_option',
   'HC_RI_GREECE_WELCOME_BANNER_TEXT_UCL',
+  'default_all_services_type_option',
+  'default_all_providers_option',
+  'default_all_populations_option',
+  'default_all_accessibilities_option',
+  'default_distance_away_tooltip',
+  'default_contact_button_label',
+  'default_view_service_label',
 ];
 
-export const CATEGORY_PLACEHOLDERS = ['default_select_topic'];
+export const CATEGORY_PLACEHOLDERS = [
+  'default_select_topic',
+  'default_select_subtopic',
+];
 
 export const SECTION_PLACEHOLDERS = ['default_select_topic'];
 
@@ -100,6 +121,10 @@ export function populateSocialMediaLinks(dynamicContent: {
       title: dynamicContent['default_banner_messenger_title'],
       href: dynamicContent['ri_greece_messenger_link'],
     },
+    whatsappLink: {
+      title: dynamicContent['default_banner_whatsapp_title'],
+      href: dynamicContent['ri_greece_whatsapp_link'],
+    },
   };
 }
 
@@ -108,8 +133,9 @@ export function populateHeaderBannerStrings(dynamicContent: {
 }): HeaderBannerStrings {
   return {
     welcomeTitle: dynamicContent['ri_greece_mission_statement'],
-    socialMediaTitle: '',
-    socialMediaDescription: '',
+    socialMediaTitle: dynamicContent['default_banner_social_media_title'],
+    socialMediaDescription:
+      dynamicContent['default_banner_social_media_description'],
   };
 }
 
@@ -135,6 +161,15 @@ export function populateServiceMapStrings(dynamicContent: {
     allCategoriesOption:
       dynamicContent['DEFAULT_SERVICE_MAP_ALL_CATEGORIES_OPTION'],
     myLocationOption: dynamicContent['default_service_map_my_location_option'],
+    allServicesTypeOption: dynamicContent['default_all_services_type_option'],
+    allProvidersOption: dynamicContent['default_all_providers_option'],
+    allPopulationsOption: dynamicContent['default_all_populations_option'],
+    allAccessibilitiesOption:
+      dynamicContent['default_all_accessibilities_option'],
+    distanceAwayStrings: {
+      informationTooltip: dynamicContent['default_distance_away_tooltip'],
+    },
+    popupStrings: populatePopupStrings(dynamicContent),
   };
 }
 
@@ -245,6 +280,7 @@ export function populateHomePageStrings(dynamicContent: {
     serviceMapStrings: populateServiceMapStrings(dynamicContent),
     searchBarStrings: populateSearchBarStrings(dynamicContent),
     topBannerString: dynamicContent['HC_RI_GREECE_WELCOME_BANNER_TEXT_UCL'],
+    footerStrings: populateFooterStrings(dynamicContent),
   };
 }
 
@@ -256,6 +292,16 @@ export function populateSearchBarStrings(dynamicContent: {
   };
 }
 
+export function populateFilterSelectStrings(dynamicContent: {
+  [key: string]: string;
+}) {
+  return {
+    filterLabel: dynamicContent['default_filter_label'],
+    mostRecent: dynamicContent['default_most_recent_filter_option'],
+    mostPopular: dynamicContent['default_most_popular_filter_option'],
+  };
+}
+
 export function populateCategoryStrings(dynamicContent: {
   [key: string]: string;
 }): CategoryStrings {
@@ -263,6 +309,8 @@ export function populateCategoryStrings(dynamicContent: {
     cookieBannerStrings: populateCookieBannerStrings(dynamicContent),
     selectTopicLabel: getSelectTopicLabel(dynamicContent),
     searchBarStrings: populateSearchBarStrings(dynamicContent),
+    footerStrings: populateFooterStrings(dynamicContent),
+    selectSubTopicLabel: dynamicContent['default_select_subtopic'],
   };
 }
 
@@ -273,6 +321,7 @@ export function populateSectionStrings(dynamicContent: {
     cookieBannerStrings: populateCookieBannerStrings(dynamicContent),
     selectTopicLabel: getSelectTopicLabel(dynamicContent),
     searchBarStrings: populateSearchBarStrings(dynamicContent),
+    footerStrings: populateFooterStrings(dynamicContent),
   };
 }
 
@@ -283,6 +332,7 @@ export function populateCustom404Strings(dynamicContent: {
     errorStrings: generate404ErrorProps(dynamicContent),
     cookieBannerStrings: populateCookieBannerStrings(dynamicContent),
     searchBarStrings: populateSearchBarStrings(dynamicContent),
+    footerStrings: populateFooterStrings(dynamicContent),
   };
 }
 
@@ -296,6 +346,7 @@ export function populateSearchResultsPageStrings(dynamicContent: {
     allResultsTabString: dynamicContent['default_all_results_tab'],
     informationTabString: dynamicContent['default_information_results_tab'],
     servicesTabString: dynamicContent['default_services_results_tab'],
+    footerStrings: populateFooterStrings(dynamicContent),
   };
 }
 
@@ -308,5 +359,36 @@ export function populateArticlePageStrings(dynamicContent: {
     cookieBannerStrings: populateCookieBannerStrings(dynamicContent),
     articleErrorStrings: generateArticleErrorProps(dynamicContent),
     lastUpdatedLabel: getLastUpdatedLabel(dynamicContent),
+    footerStrings: populateFooterStrings(dynamicContent),
+  };
+}
+
+export function populateFooterStrings(dynamicContent: {
+  [key: string]: string;
+}): FooterStrings {
+  return {
+    disclaimerSummary: dynamicContent['default_home_disclaimer'],
+  };
+}
+
+export function populatePopupStrings(dynamicContent: {
+  [key: string]: string;
+}): PopupStrings {
+  return {
+    contactButtonLabel: dynamicContent['default_contact_button_label'],
+    viewServiceLabel: dynamicContent['default_view_service_label'],
+  };
+}
+
+export function populateServicePageStrings(dynamicContent: {
+  [key: string]: string;
+}): ServicePageStrings {
+  return {
+    serviceContentStrings: populateArticleContentStrings(dynamicContent),
+    searchBarStrings: populateSearchBarStrings(dynamicContent),
+    cookieBannerStrings: populateCookieBannerStrings(dynamicContent),
+    serviceErrorStrings: generateArticleErrorProps(dynamicContent),
+    lastUpdatedLabel: getLastUpdatedLabel(dynamicContent),
+    footerStrings: populateFooterStrings(dynamicContent),
   };
 }
